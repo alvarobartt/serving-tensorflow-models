@@ -1,6 +1,6 @@
 # Serving TensorFlow models with TensorFlow Serving :orange_book:
 
-![TensorFlow Logo](https://www.amd.com/system/files/2019-11/343814-tensorflow-logo-1260wide.png)
+![TensorFlow Logo](https://inletlabs.com/assets/images/logo_stack/tensorflow-logo.png)
 
 __TensorFlow Serving is a flexible, high-performance serving system for machine learning models, 
 designed for production environments. TensorFlow Serving makes it easy to deploy new algorithms 
