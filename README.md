@@ -24,7 +24,6 @@ slice of a well known food dataset, named [Food101](https://www.tensorflow.org/d
 - [Deployment](#rocket-deployment)
 - [Docker](#whale2-docker)
 - [Usage](#mage_man-usage)
-- [Credits](#computer-credits)
 
 ---
 
@@ -50,6 +49,3 @@ slice of a well known food dataset, named [Food101](https://www.tensorflow.org/d
 
 ## :mage_man: Usage
 
----
-
-## :computer: Credits
