@@ -49,3 +49,12 @@ slice of a well known food dataset, named [Food101](https://www.tensorflow.org/d
 
 ## :mage_man: Usage
 
+  ---
+
+If we want to interact with the deployed API from Python we will need to use the [tensorflow-serving-api]() Python package that easily lets us send gRPC requests with the Tensor's data that the Inference API will receive as input data as well as handling the predicted Tensor.
+
+```python
+```
+
+You can check the documentation of tensorflow-serving-api at: 
+
