@@ -8,10 +8,6 @@ and experiments, while keeping the same server architecture and APIs. TensorFlow
 provides out-of-the-box integration with TensorFlow models, but can be easily extended to 
 serve other types of models and data.__
 
-Along this repository, the procedure so as to train and deploy a transfer learning CNN model using 
-[ResNet](https://arxiv.org/abs/1512.03385) as backbone, which classifies images retrieved from a 
-slice of a well known food dataset, named [Food101](https://www.tensorflow.org/datasets/catalog/food101).
-
 ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
 
 ---
@@ -33,6 +29,16 @@ slice of a well known food dataset, named [Food101](https://www.tensorflow.org/d
 
 ## :open_file_folder: Dataset
 
+The dataset that is going to be used to train the image classification model is Alien VS Predator, which is a small Kaggle dataset which contains a collection of
+RGB images of both aliens and predators from the popular movie series "Alien vs. Predator" from the director Paul W. S. Anderson.
+
+This dataset contains 2 classes for Aliens and Predators and both classes contain up to 247 images for training in JPG format and with an approximate size of 250x250px, and the
+same for validation, but just with 100 images.
+
+![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/data.jpg)
+
+You can find the complete dataset under the `dataset/` directory in this repository and also in Kaggle at https://www.kaggle.com/pmigdal/alien-vs-predator-images
+
 ---
 
 ## :robot: Modelling
@@ -51,10 +57,11 @@ slice of a well known food dataset, named [Food101](https://www.tensorflow.org/d
 
   ---
 
-If we want to interact with the deployed API from Python we will need to use the [tensorflow-serving-api]() Python package that easily lets us send gRPC requests with the Tensor's data that the Inference API will receive as input data as well as handling the predicted Tensor.
+If we want to interact with the deployed API from Python we will need to use the [tensorflow-serving-apis](https://github.com/tensorflow/serving) 
+Python package that easily lets us send gRPC requests with the Tensor's data that the Inference API will receive as input data as well as 
+handling the predicted Tensor.
 
 ```python
 ```
 
-You can check the documentation of tensorflow-serving-api at: 
-
+You can find a detailed example on how to use the TensorFlow Serving APIs with Python at https://github.com/tensorflow/serving/tree/master/tensorflow_serving/example
