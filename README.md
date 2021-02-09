@@ -1,3 +1,14 @@
+# Work in Progress [WIP]
+
+- [ ] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
+- [ ] Explain the modelling part in the README
+- [ ] Test the deployment of that model (caution with GIT quota)
+- [ ] Include the final notes and considerations
+- [ ] Explain how to also deploy a custom model from scratch? (future idea is to do this in another repository so as to explain the complete lifecycle of a ML model from zero to production)
+- [ ] Prepare Medium story in Towards Data Science
+
+---
+
 # Serving TensorFlow models with TensorFlow Serving :orange_book:
 
 ![TensorFlow Logo](https://inletlabs.com/assets/images/logo_stack/tensorflow-logo.png)
