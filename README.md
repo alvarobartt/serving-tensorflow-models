@@ -31,6 +31,7 @@ serve other types of models and data.__
 - [Deployment](#rocket-deployment)
 - [Docker](#whale2-docker)
 - [Usage](#mage_man-usage)
+- [Credits](#computer-credits)
 
 ---
 
@@ -40,15 +41,16 @@ serve other types of models and data.__
 
 ## :open_file_folder: Dataset
 
-The dataset that is going to be used to train the image classification model is Alien VS Predator, which is a small Kaggle dataset which contains a collection of
-RGB images of both aliens and predators from the popular movie series "Alien vs. Predator" from the director Paul W. S. Anderson.
+The dataset that is going to be used to train the image classification model is "The Simpsons Characters Data", which is a big Kaggle dataset
+that contains RGB images of some of the main The Simpsons characters including Homer, Marge, Bart, Lisa, Maggie, Barney, and much more.
 
-This dataset contains 2 classes for Aliens and Predators and both classes contain up to 247 images for training in JPG format and with an approximate size of 250x250px, and the
-same for validation, but just with 100 images.
+This dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per class, and a total of 20935 training images in JPG format
+and the images contain different sizes, but as all of them are small, we will be resizing them to 64x64px when training the model.
 
 ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/data.jpg)
 
-You can find the complete dataset under the `dataset/` directory in this repository and also in Kaggle at https://www.kaggle.com/pmigdal/alien-vs-predator-images
+You can find the complete dataset under the `dataset/` directory in this repository and also in Kaggle at 
+https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the Kaggle page is not updated.
 
 ---
 
@@ -122,4 +124,13 @@ shape = tf.TensorShape(output_tensor_proto.tensor_shape)
 result = np.array(output_tensor_proto.float_val).reshape(shape.as_list())
 ```
 
-You can find a detailed example on how to use the TensorFlow Serving APIs with Python at https://github.com/tensorflow/serving/tree/master/tensorflow_serving/example
+You can find a detailed example on how to use the TensorFlow Serving APIs with Python at 
+https://github.com/tensorflow/serving/tree/master/tensorflow_serving/example
+
+---
+
+## :computer: Credits
+
+Credits for the dataset to [Alexandre Attia](https://github.com/alexattia) for creating it, as well as the Kaggle
+community that made it possible, as they included a lot of images to the original dataset (from 20 characters to 
+up to 42).
