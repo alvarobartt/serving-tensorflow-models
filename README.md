@@ -68,6 +68,14 @@ https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the
 
 ## :mage_man: Usage
 
+<p align="center">
+  <img width="400" height="275" src="https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/meme.jpg"/>
+</p>
+
+<p align="center">
+  <i>Source: <a href="https://www.reddit.com/r/TheSimpsons/comments/ffhufz/lenny_white_carl_black/">Reddit - r/TheSimpsons</a></i>
+</p>
+
   ---
 
 If we want to interact with the deployed API from Python we can either use the [tensorflow-serving-api](https://github.com/tensorflow/serving) 
