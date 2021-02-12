@@ -69,15 +69,15 @@ Finally, from the client side you can install the Python package `tensorflow-ser
 towards using the API.
 
 ```
-pip install tensorflow-serving-api
+pip install tensorflow-serving-api==2.4.1
 ```
 
 Additionally, along this explanation the following requirements have been used, so you should install them
 using the following commands:
 
 ```
-pip install tensorflow==2.4
-pip install tensorflow-hub
+pip install tensorflow==2.4.1
+pip install tensorflow-hub==0.11.0
 ```
 
 Or you can also install them from the `requirements.txt` file as it follows:
