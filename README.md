@@ -48,8 +48,8 @@ you should know that TF-Serving is just available for Ubuntu, which means that i
 either need a Ubuntu VM or just Docker installed in your OS so as to run a Docker container which deploys
 TF-Serving.
 
-__:warning: Warning!__: in case you don't have Ubuntu, but still want to deploy TF-Serving via Docker, you 
-don't need to install TF-Serving with APT-GET, just run the Dockerfile (go to [Docker](#whale2-docker)).
+__:warning: Warning!__ In case you don't have Ubuntu, but still want to deploy TF-Serving via Docker, you 
+don't need to install TF-Serving with APT-GET, just run the Dockerfile (go to the section [Docker](#whale2-docker)).
 
 So, from your Ubuntu VM you should install `tensorflow-model-server`, but before installing it you need to 
 add the TF-Serving distribution URI as a package source as it follows:
