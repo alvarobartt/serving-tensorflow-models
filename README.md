@@ -8,10 +8,6 @@ and experiments, while keeping the same server architecture and APIs. TensorFlow
 provides out-of-the-box integration with TensorFlow models, but can be easily extended to 
 serve other types of models and data.__
 
-Along this repository, the procedure so as to train and deploy a transfer learning CNN model using 
-[ResNet](https://arxiv.org/abs/1512.03385) as backbone, which classifies images retrieved from a 
-slice of a well known food dataset, named [Food101](https://www.tensorflow.org/datasets/catalog/food101).
-
 ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
 
 ---
