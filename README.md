@@ -1,8 +1,12 @@
 # Work in Progress [WIP]
 
+- [X] Train a sample image classification model from scratch (val acc of around 80%?) -> Still not up to 80%
+- [ ] Shorten the dataset to just the 20 most populated classes?
+- [ ] All the training images are available as test images?
 - [ ] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
 - [ ] Explain the modelling part in the README
 - [ ] Test the deployment of that model (caution with GIT quota)
+- [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
 - [ ] Include the final notes and considerations
 - [ ] Explain how to also deploy a custom model from scratch? (future idea is to do this in another repository so as to explain the complete lifecycle of a ML model from zero to production)
 - [ ] Prepare Medium story in Towards Data Science
@@ -44,8 +48,9 @@ serve other types of models and data.__
 The dataset that is going to be used to train the image classification model is "The Simpsons Characters Data", which is a big Kaggle dataset
 that contains RGB images of some of the main The Simpsons characters including Homer, Marge, Bart, Lisa, Maggie, Barney, and much more.
 
-This dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per class, and a total of 20935 training images in JPG format
-and the images contain different sizes, but as all of them are small, we will be resizing them to 64x64px when training the model.
+This dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per class, and a total of 20935 
+training images in JPG format, and the images contain different sizes, but as all of them are small, we will be resizing them to 
+64x64px when training the model.
 
 ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/data.jpg)
 
@@ -55,6 +60,24 @@ https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the
 ---
 
 ## :robot: Modelling
+
+...
+
+---
+
+Finally, as a personal recommendation you should check/keep an eye on the following courses:
+
+- :fire: [Laurence Moroney](https://github.com/lmoroney)'s TensorFlow Proffesional Certificate (previously Specialization) 
+at Coursera for learning the basics of TensorFlow as you playaround with some common Deep Learning scenarios like 
+CNNs, Time Series and NLP. So feel free to check it at https://www.coursera.org/professional-certificates/tensorflow-in-practice, 
+and the course's resources at https://github.com/lmoroney/dlaicourse.
+
+- :star: [Daniel Bourke](https://github.com/mrdbourke)'s TensorFlow Zero to Mastery course he is currently 
+developing and it will be completely free including a lot of resources. So feel free to check it at 
+https://github.com/mrdbourke/tensorflow-deep-learning.
+
+__If you have some TensorFlow free learning material made by you that you want to share, feel free to
+create a PR including it in this list, and I'll be glad to feature your work!__
 
 ---
 
