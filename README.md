@@ -23,6 +23,8 @@ and experiments, while keeping the same server architecture and APIs. TensorFlow
 provides out-of-the-box integration with TensorFlow models, but can be easily extended to 
 serve other types of models and data.__
 
+TODO
+
 ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
 
 ---
@@ -40,6 +42,51 @@ serve other types of models and data.__
 ---
 
 ## :hammer_and_wrench: Requirements
+
+First of all you need to make sure that you have all the requirements installed, but before proceeding
+you should know that TF-Serving is just available for Ubuntu, which means that in order to use it you will
+either need a Ubuntu VM or just Docker installed in your OS so as to run a Docker container which deploys
+TF-Serving.
+
+__:warning: Warning!__: in case you don't have Ubuntu, but still want to deploy TF-Serving via Docker, you 
+don't need to install TF-Serving with APT-GET, just run the Dockerfile (go to [Docker](#whale2-docker)).
+
+So, from your Ubuntu VM you should install `tensorflow-model-server`, but before installing it you need to 
+add the TF-Serving distribution URI as a package source as it follows:
+
+```
+echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | sudo tee /etc/apt/sources.list.d/tensorflow-serving.list && \
+curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | sudo apt-key add -
+```
+
+And then you can install `tensorflow-model-server` using APT-GET as it follows:
+
+```
+apt-get update && apt-get install tensorflow-model-server
+```
+
+Finally, from the client side you can install the Python package `tensorflow-serving-api`, which is useful 
+towards using the API.
+
+```
+pip install tensorflow-serving-api
+```
+
+Additionally, along this explanation the following requirements have been used, so you should install them
+using the following commands:
+
+```
+pip install tensorflow==2.4
+pip install tensorflow-hub
+```
+
+Or you can also install them from the `requirements.txt` file as it follows:
+
+```
+pip install -r requirements.txt
+```
+
+If you have any problems regarding the TensorFlow installation, visit [Installation | TensorFlow](https://www.tensorflow.org/install?hl=es-419).
 
 ---
 
@@ -61,7 +108,7 @@ https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the
 
 ## :robot: Modelling
 
-...
+TODO
 
 ---
 
@@ -83,13 +130,32 @@ create a PR including it in this list, and I'll be glad to feature your work!__
 
 ## :rocket: Deployment
 
+TODO
+
 ---
 
 ## :whale2: Docker
 
+In order to reproduce the TF-Serving deployment in an Ubuntu Docker image, you can use the following set of commands:
+
+```bash
+docker build -t ubuntu-tfserving:latest deployment/
+docker run --rm --name tfserving_docker \
+           -p8080:8080 -p8081:8081 -p8082:8082 \
+           ubuntu-tfserving:latest \
+           TODO
+```
+
+For more information regarding the Docker deployment, you should check TensorFlow's 
+explanation and notes available at [TF-Serving with Docker](https://www.tensorflow.org/tfx/serving/docker?hl=en), 
+as it also explains how to use their Docker image (instead of a clear Ubuntu one) and
+some tips regarding the production deployment of the models using TF-Serving.
+
 ---
 
 ## :mage_man: Usage
+
+TODO
 
 <p align="center">
   <img width="400" height="275" src="https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/meme.jpg"/>
@@ -108,6 +174,8 @@ library to send the request to the REST API instead.
 __Note__ that the data sent on the request is the input data of the Inference APIs which is indeed a Tensor.
 
 * __Using requests__:
+
+TODO
 
 ```python
 ```
