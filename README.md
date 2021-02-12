@@ -1,14 +1,13 @@
 # Work in Progress [WIP]
 
 - [X] Train a sample image classification model from scratch (val acc of around 80%?) -> Still not up to 80%
-- [ ] Shorten the dataset to just the 20 most populated classes?
-- [ ] All the training images are available as test images?
+- [X] Shorten the dataset to just the 20 most populated classes?
+- [X] All the training images are available as test images?
 - [ ] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
 - [ ] Explain the modelling part in the README
 - [ ] Test the deployment of that model (caution with GIT quota)
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
 - [ ] Include the final notes and considerations
-- [ ] Explain how to also deploy a custom model from scratch? (future idea is to do this in another repository so as to explain the complete lifecycle of a ML model from zero to production)
 - [ ] Prepare Medium story in Towards Data Science
 
 ---
@@ -95,9 +94,13 @@ If you have any problems regarding the TensorFlow installation, visit [Installat
 The dataset that is going to be used to train the image classification model is "The Simpsons Characters Data", which is a big Kaggle dataset
 that contains RGB images of some of the main The Simpsons characters including Homer, Marge, Bart, Lisa, Maggie, Barney, and much more.
 
-This dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per class, and a total of 20935 
-training images in JPG format, and the images contain different sizes, but as all of them are small, we will be resizing them to 
-64x64px when training the model.
+The original dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per class, and a total of 20935 
+training images and 990 test images, both in JPG format, and the images in different sizes, but as all of them are small, we will be resizing 
+them to 64x64px when training the model.
+
+Anyway, we will create a custom slice of the original dataset keeping just the training set, and using a random 80/20 train-test split
+and removing the classes with less than 50 images. So on, go to [dataset/README.md](https://github.com/alvarobartt/serving-tensorflow-models/tree/master/dataset) 
+so as to find the custom dataset used in this project.
 
 ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/data.jpg)
 
