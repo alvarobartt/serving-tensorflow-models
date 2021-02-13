@@ -3,9 +3,10 @@
 - [X] Train a sample image classification model from scratch (val acc of around 80%?) -> Still not up to 80%
 - [X] Shorten the dataset to just the 20 most populated classes?
 - [X] All the training images are available as test images?
-- [ ] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
+- [X] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
 - [ ] Explain the modelling part in the README
-- [ ] Test the deployment of that model (caution with GIT quota)
+- [ ] Test the deployment of that model (caution with GIT quota) -> model not included in git
+- [ ] Explain the deployment in the README
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
 - [ ] Include the final notes and considerations
 - [ ] Prepare Medium story in Towards Data Science
