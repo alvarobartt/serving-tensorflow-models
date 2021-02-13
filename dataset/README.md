@@ -1,12 +1,19 @@
-# Dataset
+# :open_file_folder: The Simpsons Characters Dataset
 
 The original dataset can be found at [__Kaggle - The Simpsons Characters Data__](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset).
 
-While the prepared version of the dataset (the one used in this project) can be found
-at the following Dropbox URLs:
+Anyway, in this project a prepared version of the dataset has been used, so as to clean the 
+directories with a few images and just keep the ones with enough samples to train the model.
 
-- [__The Simpsons Characters Dataset - TRAIN__](https://www.dropbox.com/s/8u2k79tuqmwrwi8/train.zip) :mechanical_arm:
-- [__The Simpsons Characters Dataset - TEST__](https://www.dropbox.com/s/pnipjr7brjz1pm5/test.zip) :test_tube:
+## :mechanical_arm: Train Dataset
+
+The train dataset can be downloaded from the following Dropbox URL: https://www.dropbox.com/s/8u2k79tuqmwrwi8/train.zip
+
+## :test_tube: Test Dataset
+
+The test dataset can be downloaded from the following Dropbox URL: https://www.dropbox.com/s/pnipjr7brjz1pm5/test.zip
+
+---
 
 To download and extract the train and test datasets from the terminal just use the following commands:
 
@@ -20,6 +27,8 @@ wget --no-check-certificate https://www.dropbox.com/s/pnipjr7brjz1pm5/test.zip -
 unzip -q test.zip
 rm test.zip
 ```
+
+---
 
 Additionally, if you are using Google Colab, just use the following steps to include as a code cell in a
 Notebook, so as to download and extract the dataset under the `/content/` directory (by default):
@@ -58,6 +67,5 @@ with zipfile.ZipFile("//tmp/test.zip", "r") as zip_ref:
 zip_ref.close()
 ```
 
-__Note__: you can use the `/tmp/` as it is the recommendation, but if you
-plan to use this dataset frequently it's just better to store it under the
-`/content/` directory so as to keep them, as `/tmp` is temporary.
+__Note__: you can use the `/tmp/` as it is the recommendation, but if you plan to use this dataset 
+frequently it's just better to store it under the `/content/` directory so as to keep them, as `/tmp` is temporary.
