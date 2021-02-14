@@ -10,6 +10,8 @@
 - [X] Explain Docker deployment and usage
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
 - [ ] Include the final notes and considerations
+- [ ] Clean all the notebooks - Keep just the valid code to avoid misunderstandings
+- [ ] Prepare the UI with Streamlit (keep it simple) - use docker-compose (tf-serving & streamlit containers)
 - [ ] Prepare Medium story in Towards Data Science
 
 ---
@@ -30,6 +32,10 @@ for image classification of [The Simpsons Characters Data dataset](https://www.k
 that will be later deployed using [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving).
 
 ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
+
+---
+
+__:sparkles: STREAMLIT UI NOW AVAILABLE AT [what-simpson-character-is-this](https://github.com/alvarobartt/what-simpson-character-is-this)! :framed_picture:__
 
 ---
 
@@ -116,6 +122,21 @@ https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the
 ## :robot: Modelling
 
 TODO
+
+```python
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(224, 224, 3)),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(units=512, activation='relu'),
+    tf.keras.layers.Dropout(.2),
+    tf.keras.layers.Dense(units=256, activation='relu'),
+    tf.keras.layers.Dropout(.1),
+    tf.keras.layers.Dense(len(MAP_CHARACTERS), activation='softmax')
+])
+```
 
 ---
 
@@ -207,14 +228,29 @@ __Note__: that the data sent on the request is the input data of the Prediction 
 
 * __REST API requests using `requests`__:
 
-TODO
+Regarding the REST requests to the deployed TF-Serving Prediction API you need to install the requirements as
+it follows:
+
+```
+pip install -r requirements-rest.txt
+```
+
+And then use the following script which will send a sample The Simpsons image to be classified using the deployed model:
 
 ```python
+
 ```
 
 * __gRPC API requests using `tensorflow-serving-api`__:
 
-Now, regarding the gRPC requests to the deployed TF-Serving Prediction API
+Now, regarding the gRPC requests to the deployed TF-Serving Prediction API you need to install the requirements as
+it follows:
+
+```
+pip install -r requirements-grpc.txt
+```
+
+And then use the following script which will send a sample The Simpsons image to be classified using the deployed model:
 
 ```python
 import grpc
