@@ -6,9 +6,10 @@
 - [X] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
 - [X] Explain the modelling part in the README
 - [X] Test the deployment of that model (caution with GIT quota) -> model not included in git
-- [ ] Explain the deployment in the README
+- [X] Explain the deployment in the README
 - [X] Explain Docker deployment and usage
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
+- [ ] Prepare a working usage sample for both REST and gRPC APIs
 - [ ] Include the final notes and considerations
 - [ ] Clean all the notebooks - Keep just the valid code to avoid misunderstandings
 - [ ] Prepare the UI with Streamlit (keep it simple) - use docker-compose (tf-serving & streamlit containers)
@@ -50,6 +51,7 @@ __:sparkles: :framed_picture: STREAMLIT UI NOW AVAILABLE AT [what-simpson-charac
 - [Docker](#whale2-docker)
 - [Usage](#mage_man-usage)
 - [Credits](#computer-credits)
+- [Future Tasks](#crystal_ball-future-tasks)
 
 ---
 
@@ -230,7 +232,81 @@ create a PR including it in this list, and I'll be glad to feature your work!__
 
 ## :rocket: Deployment
 
-TODO
+Once the model has been saved using `SavedModel` format, it is pretty straight forward to get TF-Serving working, 
+if the installation succeeded. Unlike [TorchServe](https://pytorch.org/serve/), serving ML models in TF-Servving
+is simpler as you just need to have `tensorflow-model-server` installed and a model in the specified format.
+
+But regarding the TF-Serving documentation (at least from my point of view) is not that clear, so the deployment
+process may be tedious and then the usage too. Anyway, the following command is the one you need to use to deploy 
+any TensorFlow's ML model into TF-Serving:
+
+```
+tensorflow_model_server --port=8500 --rest_api_port=8501 \
+                        --model_name=simpsonsnet \
+                        --model_base_path=/home/saved_models/simpsonsnet
+```
+
+Now, even though the command is clear and self-explanatory, a more detailed explanation on the flags used is presented:
+
+- `--port`: this is the port to listen on for the gRPC API, the default value is 8500; but it's a common practice to still
+define this flag's value so as to always know the configuration of the deployed TF-Serving Server.
+- `--rest_api_port`: this is the REST API port, which is set to zero by default, which means that the REST API will not be
+deployed/exposed unless you manually set a port. There's no default value, it just needs to be different than the gRPC port, so 
+we will set it to 8501 (the next port).
+- `--model_name`: this is the name of the ML model to serve, which is the one that will be exposed in the endpoint.
+- `--model_base_path`: this is the base path where the ML model that is going to be served is placed in. Note that his is the
+absolute path, do not use relative paths.
+
+More information about the TF-Serving CLI available at 
+[Train and serve a TensorFlow model with TensorFlow Serving](https://www.tensorflow.org/tfx/tutorials/serving/rest_simple#start_running_tensorflow_serving).
+Even though the official documenation is not that helpful, you can also check `tensorflow_model_server --help`.
+
+Once TF-Serving has been successfully deployed, you can send a sample HTTP GET request to the REST API available at 
+http://localhost:8501, using the endpoint /v1/models/simpsonsnet; to do so use the following command, that sends this
+request to the _Model Status API_ that returns the served ML model basic information:
+
+```
+curl http://localhost:8501/v1/models/simpsonsnet
+```
+
+That should output something similar to the following if everything is OK:
+
+```json
+{
+ "model_version_status": [
+  {
+   "version": "1",
+   "state": "AVAILABLE",
+   "status": {
+    "error_code": "OK",
+    "error_message": ""
+   }
+  }
+ ]
+}
+```
+
+Another issue that they should be working on (and AFAIK they are not) is a way to gracefully shutdown TF-Serving server,
+as there's no clean way to do that... More information about this issue may be reported here https://github.com/tensorflow/serving/issues/356
+
+So on, the ways you have to shut it down are:
+
+- Getting the PID of `tensorflow-model-server` and kill that process:
+
+```
+ps aux | grep -i "tensorflow-model-server"
+kill -9 PID
+```
+
+- Getting the running Docker Container ID and stopping/killing it: 
+
+```
+docker ps # Retrieve the CONTAINER_ID
+docker kill CONTAINER_ID
+```
+
+None of those is the recommended way, as you are supposed to have a proper way to shut it down, anyway, currently those are
+the possibilities... If you have more information about this issue or a cleaner way to do this, please let me know!
 
 ---
 
@@ -272,7 +348,7 @@ as a template, making it easier to prepare the deployment file for your custom m
 
 ## :mage_man: Usage
 
-TODO
+Along this section ...
 
 <p align="center">
   <img width="400" height="275" src="https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/meme.jpg"/>
@@ -281,8 +357,6 @@ TODO
 <p align="center">
   <i>Source: <a href="https://www.reddit.com/r/TheSimpsons/comments/ffhufz/lenny_white_carl_black/">Reddit - r/TheSimpsons</a></i>
 </p>
-
-TODO: curl available models
 
 Before proceeding with the Python usage, just to mention that as the mapping between the labels and the predicted Tensor is a future
 task (see [Future Tasks](#crystal_ball-future-tasks) section), we will be using the following mapping dictionary so as to go from the
