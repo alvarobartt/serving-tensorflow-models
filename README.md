@@ -7,6 +7,7 @@
 - [ ] Explain the modelling part in the README
 - [X] Test the deployment of that model (caution with GIT quota) -> model not included in git
 - [ ] Explain the deployment in the README
+- [X] Explain Docker deployment and usage
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
 - [ ] Include the final notes and considerations
 - [ ] Prepare Medium story in Towards Data Science
@@ -146,7 +147,23 @@ In order to reproduce the TF-Serving deployment in an Ubuntu Docker image, you c
 
 ```bash
 docker build -t ubuntu-tfserving:latest deployment/
-docker run --rm --name tfserving_docker -p8500:8500 -p8501:8501 ubuntu-tfserving:latest
+docker run --rm --name tfserving_docker -p8500:8500 -p8501:8501 -d ubuntu-tfserving:latest
+```
+
+__Note__: make sure that you use the `-d` flag in `docker run` so that the container runs in the background
+and does not block your terminal.
+
+To check whether the deployment succeded or not you can either check if the Docker Container is running with:
+
+```
+docker ps
+```
+
+Or you can also use the runnning Docker Container ID and connect to it, so as to check the logs:
+
+```
+docker ps # Retrieve the CONTAINER_ID
+docker exec -it CONTAINER_ID /bin/bash
 ```
 
 For more information regarding the Docker deployment, you should check TensorFlow's 

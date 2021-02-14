@@ -54,6 +54,10 @@ RUN cd /home \
 # Sets the proper rights to the /home/saved_models dir and the created Python env
 RUN chown -R model-server /home/saved_models \
     && chown -R model-server /home/venv
+    
+# Creates a directory for the logs and sets permissions to it
+RUN mkdir /home/logs \
+    && chown -R model-server /home/logs
 
 # Defines the model_path environment variable and the model name
 ENV MODEL_PATH=/home/saved_models/simpsonsnet
@@ -66,4 +70,4 @@ EXPOSE $GRPC_PORT $REST_PORT
 
 # Prepare the CMD that will be run on docker run
 USER model-server
-CMD ["tensorflow_model_server", "--port", "$GRPC_PORT", "--rest_api_port", "$REST_PORT", "--model_name", "$MODEL_NAME", "--model_base_path", "$MODEL_PATH"]
+CMD tensorflow_model_server --port=$GRPC_PORT --rest_api_port=$REST_PORT --model_name=$MODEL_NAME --model_base_path=$MODEL_PATH >> /home/logs/server.log
