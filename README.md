@@ -9,7 +9,7 @@
 - [X] Explain the deployment in the README
 - [X] Explain Docker deployment and usage
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
-- [ ] Prepare a working usage sample for both REST and gRPC APIs
+- [X] Prepare a working usage sample for both REST and gRPC APIs
 - [ ] Include the final notes and considerations
 - [ ] Clean all the notebooks - Keep just the valid code to avoid misunderstandings
 - [ ] Prepare the UI with Streamlit (keep it simple) - use docker-compose (tf-serving & streamlit containers)
@@ -399,6 +399,8 @@ pip install -r requirements-rest.txt
 And then use the following script which will send a sample The Simpsons image to be classified using the deployed model:
 
 ```python
+import requests
+
 import tensorflow as tf
 
 # Apply the same preprocessing as during training (resize and rescale)
@@ -409,8 +411,6 @@ img = img/255.
 # Convert the Tensor to a batch of Tensors and then to a list
 image_tensor = tf.expand_dims(img, 0)
 image_tensor = image_tensor.numpy().tolist()
-
-import requests
 
 # Define the endpoint with the format: http://localhost:8501/v1/models/MODEL_NAME:predict
 endpoint = "http://localhost:8501/v1/models/simpsonsnet:predict"
@@ -426,7 +426,7 @@ response = requests.post(endpoint, json=json_data)
 # Retrieve the highest probablity index of the Tensor (actual prediction)
 prediction = tf.argmax(response.json()['predictions'][0])
 print(MAP_CHARACTERS[prediction.numpy()])
->>> homer_simpson
+>>> "homer_simpson"
 ```
 
 So that the request returns a JSON that looks like:
@@ -451,18 +451,28 @@ And then use the following script which will send a sample The Simpsons image to
 
 ```python
 import grpc
-import numpy as np
 
 import tensorflow as tf
-
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2_grpc
 
-# Optional: Define the proper message lenght in bytes
+# Apply the same preprocessing as during training (resize and rescale)
+img = tf.io.decode_image(open('../images/sample.jpg', 'rb').read(), channels=3)
+img = tf.image.resize(img, [224, 224])
+img = img/255.
+
+# Convert the Tensor to a batch of Tensors and then to a list
+image_tensor = tf.expand_dims(img, 0)
+image_tensor = image_tensor.numpy().tolist()
+
+# Optional: define a custom message lenght in bytes
 MAX_MESSAGE_LENGTH = 20000000
+
+# Optional: define a request timeout in seconds
+REQUEST_TIMEOUT = 5
 
 # Open a gRPC insecure channel
 channel = grpc.insecure_channel(
-    "127.0.0.1:8500",
+    "localhost:8500",
     options=[
         ("grpc.max_send_message_length", MAX_MESSAGE_LENGTH),
         ("grpc.max_receive_message_length", MAX_MESSAGE_LENGTH),
@@ -479,17 +489,20 @@ req.model_spec.signature_name = ''
 
 # Convert to Tensor Proto and send the request
 # Note that shape is in NHWC (num_samples x height x width x channels) format
-tensor = tf.make_tensor_proto(image.tolist())
-req.inputs["input_1"].CopyFrom(tensor)  # Available at /metadata
+tensor = tf.make_tensor_proto(image_tensor)
+req.inputs["conv2d_input"].CopyFrom(tensor)  # Available at /metadata
 
 # Send request
 response = stub.Predict(req, REQUEST_TIMEOUT)
 
-# Handle request's output
-output_tensor_proto = response.outputs["lambda_4"]  # Available at /metadata
+# Handle request's response
+output_tensor_proto = response.outputs["dense_2"]  # Available at /metadata
 shape = tf.TensorShape(output_tensor_proto.tensor_shape)
 
-result = np.array(output_tensor_proto.float_val).reshape(shape.as_list())
+result = tf.reshape(output_tensor_proto.float_val, shape)
+result = tf.argmax(result, 1).numpy()[0]
+print(MAP_CHARACTERS[result])
+>>> "homer_simpson"
 ```
 
 You can find a detailed example on how to use the TensorFlow Serving APIs with Python at 
