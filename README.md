@@ -348,7 +348,11 @@ as a template, making it easier to prepare the deployment file for your custom m
 
 ## :mage_man: Usage
 
-Along this section ...
+Along this section we will see how to interact with the deployed APIs (REST and gRPC) via Python, so as to send sample requests
+to the Prediction APIs to classify images from The Simpsons Characters.
+
+__Note__: that as the model is pretty simple, the predictions can be wrong, but that's part of any ML project lifecycle, so that
+the model improves with iterations and retraining processes. Feel free to update/improve the model!
 
 <p align="center">
   <img width="400" height="275" src="https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/meme.jpg"/>
@@ -395,8 +399,44 @@ pip install -r requirements-rest.txt
 And then use the following script which will send a sample The Simpsons image to be classified using the deployed model:
 
 ```python
+import tensorflow as tf
 
+# Apply the same preprocessing as during training (resize and rescale)
+img = tf.io.decode_image(open('../images/sample.jpg', 'rb').read(), channels=3)
+img = tf.image.resize(img, [224, 224])
+img = img/255.
+
+# Convert the Tensor to a batch of Tensors and then to a list
+image_tensor = tf.expand_dims(img, 0)
+image_tensor = image_tensor.numpy().tolist()
+
+import requests
+
+# Define the endpoint with the format: http://localhost:8501/v1/models/MODEL_NAME:predict
+endpoint = "http://localhost:8501/v1/models/simpsonsnet:predict"
+
+# Prepare the data that is going to be sent in the POST request
+json_data = {
+  "instances": image_tensor
+}
+
+# Send the request to the Prediction API
+response = requests.post(endpoint, json=json_data)
+
+# Retrieve the highest probablity index of the Tensor (actual prediction)
+prediction = tf.argmax(response.json()['predictions'][0])
+print(MAP_CHARACTERS[prediction.numpy()])
+>>> homer_simpson
 ```
+
+So that the request returns a JSON that looks like:
+
+```json
+{"predictions": [[0.00112942711, 1.89338539e-06, 6.25940174e-07, 0.0102192815, 9.25596683e-11, 0.000837278785, 1.31278114e-06, 1.00998604e-05, 3.29665169e-13, 7.77766691e-05, 9.85182158e-10, 0.922698259, 8.06062089e-05, 0.0109400107, 1.43308043e-07, 0.0312022753, 1.29294483e-06, 0.00805542618, 0.0105673922, 2.42914098e-06, 0.00104467699, 0.000662887353, 0.000846361392, 2.22587715e-07, 1.64697163e-08, 4.29076272e-06, 0.00160555355, 3.81118035e-08, 1.49436534e-08, 2.88611943e-07, 8.00799604e-09, 1.01875921e-05]]}
+```
+
+That we are processing so as to determine which is the label that corresponds to the highest probability index based on the
+model's predicted Tensor.
 
 ### __gRPC API requests using `tensorflow-serving-api`__:
 
