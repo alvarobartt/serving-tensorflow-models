@@ -1,22 +1,3 @@
-# Work in Progress [WIP]
-
-- [X] Train a sample image classification model from scratch (val acc of around 80%?) -> Still not up to 80%
-- [X] Shorten the dataset to just the 20 most populated classes?
-- [X] All the training images are available as test images?
-- [X] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
-- [X] Explain the modelling part in the README
-- [X] Test the deployment of that model (caution with GIT quota) -> model not included in git
-- [X] Explain the deployment in the README
-- [X] Explain Docker deployment and usage
-- [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
-- [X] Prepare a working usage sample for both REST and gRPC APIs
-- [ ] Include the final notes and considerations
-- [ ] Clean all the notebooks - Keep just the valid code to avoid misunderstandings
-- [ ] Prepare the UI with Streamlit (keep it simple) - use docker-compose (tf-serving & streamlit containers)
-- [ ] Prepare Medium story in Towards Data Science
-
----
-
 # Serving TensorFlow models with TensorFlow Serving :orange_book:
 
 ![TensorFlow Logo](https://inletlabs.com/assets/images/logo_stack/tensorflow-logo.png)
@@ -183,7 +164,7 @@ And we will be using the following piece of code to dump the model using this fo
 import tensorflow as tf
 import os
 
-save_path = os.path.join("/home/simpsonsnet/1/")
+save_path = os.path.join("/home/saved_models/simpsonsnet/1/")
 tf.saved_model.save(trained_model, save_path)
 ```
 
