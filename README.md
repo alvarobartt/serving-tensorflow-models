@@ -4,7 +4,7 @@
 - [X] Shorten the dataset to just the 20 most populated classes?
 - [X] All the training images are available as test images?
 - [X] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
-- [ ] Explain the modelling part in the README
+- [X] Explain the modelling part in the README
 - [X] Test the deployment of that model (caution with GIT quota) -> model not included in git
 - [ ] Explain the deployment in the README
 - [X] Explain Docker deployment and usage
@@ -35,7 +35,9 @@ that will be later deployed using [TensorFlow Serving](https://www.tensorflow.or
 
 ---
 
-__:sparkles: STREAMLIT UI NOW AVAILABLE AT [what-simpson-character-is-this](https://github.com/alvarobartt/what-simpson-character-is-this)! :framed_picture:__
+__:sparkles: :framed_picture: STREAMLIT UI NOW AVAILABLE AT [what-simpson-character-is-this](https://github.com/alvarobartt/what-simpson-character-is-this)!__
+
+![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/ui-demo.gif)
 
 ---
 
@@ -121,9 +123,40 @@ https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the
 
 ## :robot: Modelling
 
-TODO
+Once the data has been explored, which means that we have a slight overview on the data, we can proceed to the
+definition of the model. When it comes to images, in this case, to image classification problems, the most-common
+neural networks used are the CNNs, which stands for Convolutional Neural Network.
+
+Anyway, as during this project the modelling part is not the core of it, you should check [Andrew Ng](https://twitter.com/andrewyng)'s 
+course on CNNs that is freely available on YouTube at 
+[Convolutional Neural Networks - Course 4 of the Deep Learning Specialization](https://www.youtube.com/watch?v=ArPaAX_PhIs&list=PLkDaE6sCZn6Gl29AoE31iwdVwSG-KnDzF)
+as it contains a lot of useful resources and clear explanations on the basics of CNNs.
+
+So on, we have decided to create our own custom CNN model instead of using Transfer Learning. The created model architecture
+consists on an initial `Conv2D` layer (that also indicates the `input_shape` of the net), which is a 2D convolutional layer 
+that produces 16 filters as output of windows of 3x3 convolutions, followed by a `MaxPooling2D` in order to downsample the Tensor
+resulting from the previous convolutional layer.
+
+Usually, you will find this layer after two consecutive convolutions, but for the sake of simplicity, here we will be 
+downsampling the data after each convolution, as this is a simple CNN with a relatively small dataset (less than 20k images).
+
+Then we will include another combination of `Conv2D` and `MaxPooling2D` layers, but increasing the number of convolutional filters,
+this is being done so as to extract more specific patterns than before. So that increasing the number of convolutional filters means
+that we will provide more data to the CNN as it is capturing more combinations of pixel values from the input image Tensor.
+
+After applying the convolutional operations, we will include a `Flatten` layer in order to transform the image Tensor into a 1D Tensor
+which prepares the data that goes through the CNN so as to include a few fully connected layers after it.
+
+Finally, we will include some `Dense` fully connected layers so as to assign the final weights of the net, and some `Dropout` layers
+to avoid overfitting during the training phase. You also need to take into consideration that the latest `Dense` layer contains as much
+units as the total labels to predict, which in this case is the number of The Simpsons Characters available in the training set.
+
+The trained model has been named __SimpsonsNet__ (this name will be used later while serving the model as its identifier) and its 
+architecture looks like:
 
 ```python
+import tensorflow as tf
+
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(224, 224, 3)),
     tf.keras.layers.MaxPooling2D(2,2),
@@ -136,6 +169,45 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dropout(.1),
     tf.keras.layers.Dense(len(MAP_CHARACTERS), activation='softmax')
 ])
+```
+
+Finally, once trained we will need to dump the model (not the weights) in `SavedModel` format, which is the universal serialization
+format for the TensorFlow models. This format provides a language-neutral format to save ML models that is recoverable and hermetic. 
+It enables higher-level systems and tools to produce, consume and transform TensorFlow models.
+
+And we will be using the following piece of code to dump the model using this format:
+
+```python
+import tensorflow as tf
+import os
+
+save_path = os.path.join("/home/simpsonsnet/1/")
+tf.saved_model.save(trained_model, save_path)
+```
+
+The resulting model's directory should more or less look like the following:
+
+```
+assets/
+assets.extra/
+variables/
+    variables.data-?????-of-?????
+    variables.index
+saved_model.pb
+```
+
+More information regarding the `SavedModel` format at [TensorFlow SavedModel](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/README.md).
+
+__Note__: the model has been trained on a NVIDIA GeForce GTX 1070 8GB GPU using CUDA 11. If you want to get you GPU specs, 
+just use the `nvidia-smi` command on your console, but make sure that you have your NVIDIA drivers properly installed. 
+You also need to check that both CUDA and the cuDNN SDK so as to get the GPU training working with TensorFlow. The code 
+provided below explains how to make sure that TensorFlow build is detecting and using your GPU. This process may seem tedious
+to setup the first time... More information available at [TensorFlow GPU Install](https://www.tensorflow.org/install/gpu)
+
+```python
+import tensorflow as tf
+tf.config.list_physical_devices('GPU')
+tf.test.is_built_with_cuda()
 ```
 
 ---
@@ -218,38 +290,14 @@ predicted Tensor highest index probability to the matching label on The Simpsons
 
 ```python
 {
-    0: "abraham_grampa_simpson",
-    1: "apu_nahasapeemapetilon",
-    2: "barney_gumble",
-    3: "bart_simpson",
-    4: "carl_carlson",
-    5: "charles_montgomery_burns",
-    6: "chief_wiggum",
-    7: "comic_book_guy",
-    8: "disco_stu",
-    9: "edna_krabappel",
-    10: "groundskeeper_willie",
-    11: "homer_simpson",
-    12: "kent_brockman",
-    13: "krusty_the_clown",
-    14: "lenny_leonard",
-    15: "lisa_simpson",
-    16: "maggie_simpson",
-    17: "marge_simpson",
-    18: "martin_prince",
-    19: "mayor_quimby",
-    20: "milhouse_van_houten",
-    21: "moe_szyslak",
-    22: "ned_flanders",
-    23: "nelson_muntz",
-    24: "patty_bouvier",
-    25: "principal_skinner",
-    26: "professor_john_frink",
-    27: "ralph_wiggum",
-    28: "selma_bouvier",
-    29: "sideshow_bob",
-    30: "snake_jailbird",
-    31: "waylon_smithers"
+    0: "abraham_grampa_simpson", 1: "apu_nahasapeemapetilon", 2: "barney_gumble", 3: "bart_simpson",
+    4: "carl_carlson", 5: "charles_montgomery_burns", 6: "chief_wiggum", 7: "comic_book_guy",
+    8: "disco_stu", 9: "edna_krabappel", 10: "groundskeeper_willie", 11: "homer_simpson",
+    12: "kent_brockman", 13: "krusty_the_clown", 14: "lenny_leonard", 15: "lisa_simpson",
+    16: "maggie_simpson", 17: "marge_simpson", 18: "martin_prince", 19: "mayor_quimby",
+    20: "milhouse_van_houten", 21: "moe_szyslak", 22: "ned_flanders", 23: "nelson_muntz",
+    24: "patty_bouvier", 25: "principal_skinner", 26: "professor_john_frink", 27: "ralph_wiggum",
+    28: "selma_bouvier", 29: "sideshow_bob", 30: "snake_jailbird", 31: "waylon_smithers"
 }
 ```
 
