@@ -5,7 +5,7 @@
 - [X] All the training images are available as test images?
 - [X] Train a sample image classification model using a pre-trained TensorFlow model from the Hub
 - [ ] Explain the modelling part in the README
-- [ ] Test the deployment of that model (caution with GIT quota) -> model not included in git
+- [X] Test the deployment of that model (caution with GIT quota) -> model not included in git
 - [ ] Explain the deployment in the README
 - [X] Recommend useful resources for learning TensorFlow (personal recommendations you may have others)
 - [ ] Include the final notes and considerations
@@ -23,7 +23,10 @@ and experiments, while keeping the same server architecture and APIs. TensorFlow
 provides out-of-the-box integration with TensorFlow models, but can be easily extended to 
 serve other types of models and data.__
 
-TODO
+This repository is a guide on how to train, save, deploy and interact with ML models in production
+environments for TensorFlow models. Along this repository we will prepare and train a custom CNN model
+for image classification of [The Simpsons Characters Data dataset](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset), 
+that will be later deployed using [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving).
 
 ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
 
@@ -72,12 +75,11 @@ towards using the API.
 pip install tensorflow-serving-api==2.4.1
 ```
 
-Additionally, along this explanation the following requirements have been used, so you should install them
-using the following commands:
+You will also need to install `tensorflow` matching version with the `tensorflow-serving-api` (we will be using
+the latest version on the date that this repository is being published) with the following command:
 
 ```
 pip install tensorflow==2.4.1
-pip install tensorflow-hub==0.11.0
 ```
 
 Or you can also install them from the `requirements.txt` file as it follows:
@@ -144,16 +146,17 @@ In order to reproduce the TF-Serving deployment in an Ubuntu Docker image, you c
 
 ```bash
 docker build -t ubuntu-tfserving:latest deployment/
-docker run --rm --name tfserving_docker \
-           -p8080:8080 -p8081:8081 -p8082:8082 \
-           ubuntu-tfserving:latest \
-           TODO
+docker run --rm --name tfserving_docker -p8500:8500 -p8501:8501 ubuntu-tfserving:latest
 ```
 
 For more information regarding the Docker deployment, you should check TensorFlow's 
 explanation and notes available at [TF-Serving with Docker](https://www.tensorflow.org/tfx/serving/docker?hl=en), 
 as it also explains how to use their Docker image (instead of a clear Ubuntu one) and
 some tips regarding the production deployment of the models using TF-Serving.
+
+Also, if you go through the [deployment/Dockerfile](https://github.com/alvarobartt/serving-tensorflow-models/blob/master/deployment/Dockerfile) 
+you will see that there's a comment per Dockerfile line explaining what is it doing. So that you can also take that Dockerfile
+as a template, making it easier to prepare the deployment file for your custom model.
 
 ---
 
@@ -169,22 +172,32 @@ TODO
   <i>Source: <a href="https://www.reddit.com/r/TheSimpsons/comments/ffhufz/lenny_white_carl_black/">Reddit - r/TheSimpsons</a></i>
 </p>
 
+TODO: curl available models
+
+```json
+{}
+```
+
+TODO: reversed carl and lenny
+
   ---
 
 If we want to interact with the deployed API from Python we can either use the [tensorflow-serving-api](https://github.com/tensorflow/serving) 
 Python package that easily lets us send gRPC requests or otherwise, you can use the [requests](https://requests.readthedocs.io/en/master/) Python 
 library to send the request to the REST API instead.
 
-__Note__ that the data sent on the request is the input data of the Inference APIs which is indeed a Tensor.
+__Note__: that the data sent on the request is the input data of the Prediction APIs which is indeed a Tensor.
 
-* __Using requests__:
+* __REST API requests using `requests`__:
 
 TODO
 
 ```python
 ```
 
-* __Using tensorflow-serving-api__:
+* __gRPC API requests using `tensorflow-serving-api`__:
+
+Now, regarding the gRPC requests to the deployed TF-Serving Prediction API
 
 ```python
 import grpc
@@ -209,7 +222,7 @@ stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
 
 # Create the PredictRequest and set its values
 req = predict_pb2.PredictRequest()
-req.model_spec.name = 'alien-vs-predator-net'
+req.model_spec.name = 'simpsonsnet'
 req.model_spec.signature_name = ''
 
 # Convert to Tensor Proto and send the request
@@ -237,3 +250,10 @@ https://github.com/tensorflow/serving/tree/master/tensorflow_serving/example
 Credits for the dataset to [Alexandre Attia](https://github.com/alexattia) for creating it, as well as the Kaggle
 community that made it possible, as they included a lot of images to the original dataset (from 20 characters to 
 up to 42).
+
+
+---
+
+## :crystal_ball: Future Tasks
+
+- Include label-prediction mapping using the following solution: https://stackoverflow.com/questions/53530354/tensorflow-serving-predictions-mapped-to-labels

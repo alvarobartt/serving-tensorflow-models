@@ -1,50 +1,69 @@
 # Docker pulls the specified image and sets it as the working image
-ARG BASE_IMAGE="ubuntu:latest"
+ARG BASE_IMAGE="ubuntu:20.04"
 FROM ${BASE_IMAGE}
 
-# Create the Docker Image labels
-ARG BUILD_DATE
-LABEL org.label-schema.build-date=$BUILD_DATE
-LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.description="TensorFlow Human Detection Model"
-LABEL maintainer="pm.dri.team@frontiersin.org"
+# TODO
+ENV PYTHONUNBUFFERED TRUE
 
-# Updates and installs Ubuntu dependencies
-RUN apt-get clean && apt-get update -y
-RUN apt-get install wget curl unzip gnupg -y
+# TODO
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+    ca-certificates \
+    python3-dev \
+    python3-distutils \
+    python3-venv \
+    curl \
+    wget \
+    unzip \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/* \
+    && cd /tmp \
+    && curl -O https://bootstrap.pypa.io/get-pip.py \
+    && python3 get-pip.py \
+    && rm get-pip.py
 
-# Sets the Miniconda3 PATH before installing it
-ENV PATH="/root/miniconda3/bin:${PATH}"
-ARG PATH="/root/miniconda3/bin:${PATH}"
+# TODO
+RUN python3 -m venv /home/venv
+ENV PATH="/home/venv/bin:$PATH"
 
-# Downloads the Miniconda3 Bash script and installs conda
-RUN curl -O "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" \
-    && mkdir /root/.conda \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh
+# TODO
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+RUN update-alternatives --install /usr/local/bin/pip pip /usr/local/bin/pip3 1
 
-# Update conda before proceeding
-RUN conda update -n base -c defaults conda -y
+# Creates a new Ubuntu user
+RUN useradd -m model-server
 
-# Initialize conda in bash config files
-RUN conda init bash
-
-# Creates a new conda environment with Python 3.7
-RUN conda install python=3.7 -y
-
-# Upgrades PIP before proceeding
-RUN python -m pip install pip --upgrade
+# Upgrades PIP before proceeding and installs setuptools
+RUN pip install pip --upgrade
+RUN pip install -U pip setuptools
 
 # Installs the TensorFlow Serving requirements
-RUN python -m pip install tensorflow
+RUN pip install tensorflow
 RUN echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | tee /etc/apt/sources.list.d/tensorflow-serving.list && \
 curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add -
 RUN apt-get update && apt-get install tensorflow-model-server -y
 
-# Downloads the TensorFlow model
+# Downloads the TensorFlow trained model
 RUN cd /home \
-    && wget -nv "https://www.dropbox.com/s/jw4e8wtd4xix948/human_detection.zip" \
-    && unzip human_detection.zip \
-    && rm human_detection.zip \
-    && mkdir saved_models \
-    && mv human_detection saved_models/
+    && wget -nv "https://www.dropbox.com/s/4l0efitsuvfoxhj/simpsonsnet.zip" \
+    && unzip simpsonsnet.zip \
+    && rm simpsonsnet.zip \
+    && mkdir /home/saved_models \
+    && mv simpsonsnet /home/saved_models/
+
+# Sets the proper rights to the /home/saved_models dir and the created Python env
+RUN chown -R model-server /home/saved_models \
+    && chown -R model-server /home/venv
+
+# Defines the model_path environment variable and the model name
+ENV MODEL_PATH=/home/saved_models/simpsonsnet
+ENV MODEL_NAME=simpsonsnet
+
+# Expose the ports 8500 (gRPC) and 8501 (REST)
+ENV GRPC_PORT=8500
+ENV REST_PORT=8501
+EXPOSE $GRPC_PORT $REST_PORT
+
+# Prepare the CMD that will be run on docker run
+USER model-server
+CMD ["tensorflow_model_server", "--port", "$GRPC_PORT", "--rest_api_port", "$REST_PORT", "--model_name", "$MODEL_NAME", "--model_base_path", "$MODEL_PATH"]
