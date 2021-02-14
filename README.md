@@ -291,10 +291,10 @@ as there's no clean way to do that... More information about this issue may be r
 
 So on, the ways you have to shut it down are:
 
-- Getting the PID of `tensorflow-model-server` and kill that process:
+- Getting the PID of `tensorflow_model_server` and kill that process:
 
 ```
-ps aux | grep -i "tensorflow-model-server"
+ps aux | grep -i "tensorflow_model_server"
 kill -9 PID
 ```
 
