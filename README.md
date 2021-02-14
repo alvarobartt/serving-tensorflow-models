@@ -212,15 +212,11 @@ TODO
 
 TODO: curl available models
 
-```json
-{}
-```
-
 Before proceeding with the Python usage, just to mention that as the mapping between the labels and the predicted Tensor is a future
 task (see [Future Tasks](#crystal_ball-future-tasks) section), we will be using the following mapping dictionary so as to go from the
 predicted Tensor highest index probability to the matching label on The Simpsons Characters Data dataset.
 
-```json
+```python
 {
     0: "abraham_grampa_simpson",
     1: "apu_nahasapeemapetilon",
@@ -265,7 +261,7 @@ library to send the request to the REST API instead.
 
 __Note__: that the data sent on the request is the input data of the Prediction APIs which is indeed a Tensor.
 
-* __REST API requests using `requests`__:
+### __REST API requests using `requests`__:
 
 Regarding the REST requests to the deployed TF-Serving Prediction API you need to install the requirements as
 it follows:
@@ -280,7 +276,7 @@ And then use the following script which will send a sample The Simpsons image to
 
 ```
 
-* __gRPC API requests using `tensorflow-serving-api`__:
+### __gRPC API requests using `tensorflow-serving-api`__:
 
 Now, regarding the gRPC requests to the deployed TF-Serving Prediction API you need to install the requirements as
 it follows:
@@ -294,6 +290,8 @@ And then use the following script which will send a sample The Simpsons image to
 ```python
 import grpc
 import numpy as np
+
+import tensorflow as tf
 
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2_grpc
 
