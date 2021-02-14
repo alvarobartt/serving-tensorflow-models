@@ -2,10 +2,10 @@
 ARG BASE_IMAGE="ubuntu:20.04"
 FROM ${BASE_IMAGE}
 
-# TODO
+# Allow log messages to be dumped in the stream (not buffer)
 ENV PYTHONUNBUFFERED TRUE
 
-# TODO
+# Install the Ubuntu dependencies and Python 3
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     ca-certificates \
@@ -22,11 +22,11 @@ RUN apt-get update \
     && python3 get-pip.py \
     && rm get-pip.py
 
-# TODO
+# Create a new Python env and include it in the PATH
 RUN python3 -m venv /home/venv
 ENV PATH="/home/venv/bin:$PATH"
 
-# TODO
+# Update the default system Python version to Python3/PIP3
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN update-alternatives --install /usr/local/bin/pip pip /usr/local/bin/pip3 1
 
