@@ -1,0 +1,3 @@
+tensorflow==2.4.1
+tensorflow-hub==0.11.0
+tensorflow-serving-api==2.4.1
