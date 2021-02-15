@@ -13,13 +13,13 @@ environments for TensorFlow models. Along this repository we will prepare and tr
 for image classification of [The Simpsons Characters Data dataset](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset), 
 that will be later deployed using [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving).
 
-![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
+TODO: ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
 
 ---
 
-__:sparkles: :framed_picture: STREAMLIT UI NOW AVAILABLE AT [what-simpson-character-is-this](https://github.com/alvarobartt/what-simpson-character-is-this)!__
+__:sparkles: :framed_picture: STREAMLIT UI WILL BE AVAILABLE IN THE UPCOMING DAYS AT [tensorflow-serving-streamlit](https://github.com/alvarobartt/tensorflow-serving-streamlit)!__
 
-![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/ui-demo.gif)
+TODO: ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/ui-demo.gif)
 
 ---
 
@@ -385,12 +385,12 @@ import requests
 import tensorflow as tf
 
 # Apply the same preprocessing as during training (resize and rescale)
-img = tf.io.decode_image(open('../images/sample.jpg', 'rb').read(), channels=3)
-img = tf.image.resize(img, [224, 224])
-img = img/255.
+image = tf.io.decode_image(open('../images/sample.jpg', 'rb').read(), channels=3)
+image = tf.image.resize(image, [224, 224])
+image = image/255.
 
 # Convert the Tensor to a batch of Tensors and then to a list
-image_tensor = tf.expand_dims(img, 0)
+image_tensor = tf.expand_dims(image, 0)
 image_tensor = image_tensor.numpy().tolist()
 
 # Define the endpoint with the format: http://localhost:8501/v1/models/MODEL_NAME:predict
@@ -437,12 +437,12 @@ import tensorflow as tf
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2_grpc
 
 # Apply the same preprocessing as during training (resize and rescale)
-img = tf.io.decode_image(open('../images/sample.jpg', 'rb').read(), channels=3)
-img = tf.image.resize(img, [224, 224])
-img = img/255.
+image = tf.io.decode_image(open('../images/sample.jpg', 'rb').read(), channels=3)
+image = tf.image.resize(img, [224, 224])
+image = image/255.
 
 # Convert the Tensor to a batch of Tensors and then to a list
-image_tensor = tf.expand_dims(img, 0)
+image_tensor = tf.expand_dims(image, 0)
 image_tensor = image_tensor.numpy().tolist()
 
 # Optional: define a custom message lenght in bytes
