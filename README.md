@@ -87,56 +87,51 @@ If you have any problems regarding the TensorFlow installation, visit [Installat
 
 ## :open_file_folder: Dataset
 
-The dataset that is going to be used to train the image classification model is "The Simpsons Characters Data", which is a big Kaggle dataset
-that contains RGB images of some of the main The Simpsons characters including Homer, Marge, Bart, Lisa, Maggie, Barney, and much more.
+The dataset that is going to be used to train the image classification model is 
+"[The Simpsons Characters Data](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset)", which is a big Kaggle 
+dataset that contains RGB images of some of the main The Simpsons characters including Homer, Marge, Bart, Lisa, 
+Barney, and much more.
 
-The original dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per class, and a total of 20935 
-training images and 990 test images, both in JPG format, and the images in different sizes, but as all of them are small, we will be resizing 
-them to 64x64px when training the model.
+The original dataset contains 42 classes of The Simpsons characters, with an unbalanced number of samples per 
+class, and a total of 20,935 training images and 990 test images in JPG format, and the images in different 
+sizes, but as all of them are small, we will be resizing them to 64x64px when training the model.
 
-Anyway, we will create a custom slice of the original dataset keeping just the training set, and using a random 80/20 train-test split
-and removing the classes with less than 50 images. So on, go to [dataset/README.md](https://github.com/alvarobartt/serving-tensorflow-models/tree/master/dataset) 
-so as to find the custom dataset used in this project.
+Anyway, we will create a custom slice of the original dataset keeping just the training set, and using a 
+random 80/20 train-test split and removing the classes with less than 50 images. So on, we will be have 32 
+classes, with 13,210 training images, 3,286 validation images, and 4,142 testing images.
+
+Find all the information about the dataset in [dataset/README.md](https://github.com/alvarobartt/serving-tensorflow-models/tree/master/dataset).
 
 ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/data.jpg)
-
-You can find the complete dataset under the `dataset/` directory in this repository and also in Kaggle at 
-https://www.kaggle.com/alexattia/the-simpsons-characters-dataset even though the Kaggle page is not updated.
 
 ---
 
 ## :robot: Modelling
 
-Once the data has been explored, which means that we have a slight overview on the data, we can proceed to the
-definition of the model. When it comes to images, in this case, to image classification problems, the most-common
-neural networks used are the CNNs, which stands for Convolutional Neural Network.
+Once the data has been explored, we are going to proceed with the definition of the ML model, which in this case 
+will be a __CNN (Convolutional Neural Network)__ as we are facing an image classification problem.
 
-Anyway, as during this project the modelling part is not the core of it, you should check [Andrew Ng](https://twitter.com/andrewyng)'s 
-course on CNNs that is freely available on YouTube at 
-[Convolutional Neural Networks - Course 4 of the Deep Learning Specialization](https://www.youtube.com/watch?v=ArPaAX_PhIs&list=PLkDaE6sCZn6Gl29AoE31iwdVwSG-KnDzF)
-as it contains a lot of useful resources and clear explanations on the basics of CNNs.
+The created model architecture consists of an initial `Conv2D` layer (that also indicates the input_shape of the 
+net), which is a 2D convolutional layer that produces 16 filters as the output of windows of 3x3 convolutions, 
+followed by a `MaxPooling2D` to downsample the Tensor resulting from the previous convolutional layer. Usually, 
+you will find this layer after two consecutive convolutions, but for the sake of simplicity, here we will be 
+downsampling the data after each convolution, as this is a simple CNN with a relatively small dataset (less 
+than 20k images).
 
-So on, we have decided to create our own custom CNN model instead of using Transfer Learning. The created model architecture
-consists on an initial `Conv2D` layer (that also indicates the `input_shape` of the net), which is a 2D convolutional layer 
-that produces 16 filters as output of windows of 3x3 convolutions, followed by a `MaxPooling2D` in order to downsample the Tensor
-resulting from the previous convolutional layer.
+Then we will include another combination of `Conv2D` and `MaxPooling2D` layers as increasing the number of 
+convolutional filters means that we will provide more data to the CNN as it is capturing more combinations 
+of pixel values from the input image Tensor.
 
-Usually, you will find this layer after two consecutive convolutions, but for the sake of simplicity, here we will be 
-downsampling the data after each convolution, as this is a simple CNN with a relatively small dataset (less than 20k images).
+After applying the convolutional operations, we will include a `Flatten` layer to transform the image Tensor into 
+a 1D Tensor which prepares the data that goes through the CNN to include a few fully connected layers after it.
 
-Then we will include another combination of `Conv2D` and `MaxPooling2D` layers, but increasing the number of convolutional filters,
-this is being done so as to extract more specific patterns than before. So that increasing the number of convolutional filters means
-that we will provide more data to the CNN as it is capturing more combinations of pixel values from the input image Tensor.
+Finally, we will include some `Dense` fully connected layers to assign the final weights of the net, and some 
+Dropout layers to avoid overfitting during the training phase. You also need to take into consideration that
+the latest `Dense` layer contains as many units as the total labels to predict, which in this case is the number 
+of The Simpsons characters available in the training set.
 
-After applying the convolutional operations, we will include a `Flatten` layer in order to transform the image Tensor into a 1D Tensor
-which prepares the data that goes through the CNN so as to include a few fully connected layers after it.
-
-Finally, we will include some `Dense` fully connected layers so as to assign the final weights of the net, and some `Dropout` layers
-to avoid overfitting during the training phase. You also need to take into consideration that the latest `Dense` layer contains as much
-units as the total labels to predict, which in this case is the number of The Simpsons Characters available in the training set.
-
-The trained model has been named __SimpsonsNet__ (this name will be used later while serving the model as its identifier) and its 
-architecture looks like:
+The trained model has been named __SimpsonsNet__ (this name will be used later while serving the model as its 
+identifier) and its architecture looks like this:
 
 ```python
 import tensorflow as tf
@@ -159,17 +154,15 @@ Finally, once trained we will need to dump the model (not the weights) in `Saved
 format for the TensorFlow models. This format provides a language-neutral format to save ML models that is recoverable and hermetic. 
 It enables higher-level systems and tools to produce, consume and transform TensorFlow models.
 
-And we will be using the following piece of code to dump the model using this format:
-
 ```python
 import tensorflow as tf
 import os
 
-save_path = os.path.join("/home/saved_models/simpsonsnet/1/")
+save_path = os.path.join("/home/saved_models/saved_model/1/")
 tf.saved_model.save(trained_model, save_path)
 ```
 
-The resulting model's directory should more or less look like the following:
+The resulting `SavedModel`'s directory should look like the following:
 
 ```
 assets/
@@ -180,13 +173,13 @@ variables/
 saved_model.pb
 ```
 
-More information regarding the `SavedModel` format at [TensorFlow SavedModel](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/README.md).
+More information regarding the `SavedModel` format at 
+[TensorFlow SavedModel](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/README.md).
 
-__Note__: the model has been trained on a NVIDIA GeForce GTX 1070 8GB GPU using CUDA 11. If you want to get you GPU specs, 
+__Note__: the model has been trained on an NVIDIA GeForce GTX 1070 8GB GPU using CUDA 11. If you want to get your GPU specs, 
 just use the `nvidia-smi` command on your console, but make sure that you have your NVIDIA drivers properly installed. 
-You also need to check that both CUDA and the cuDNN SDK so as to get the GPU training working with TensorFlow. The code 
-provided below explains how to make sure that TensorFlow build is detecting and using your GPU. This process may seem tedious
-to setup the first time... More information available at [TensorFlow GPU Install](https://www.tensorflow.org/install/gpu)
+You also need to check that both CUDA and the cuDNN SDK get the GPU training working with TensorFlow. The code 
+provided below explains how to make sure that the TensorFlow build is detecting and using your GPU.
 
 ```python
 import tensorflow as tf
@@ -194,18 +187,25 @@ tf.config.list_physical_devices('GPU')
 tf.test.is_built_with_cuda()
 ```
 
+More information available at [TensorFlow GPU Install](https://www.tensorflow.org/install/gpu).
+
 ---
 
 Finally, as a personal recommendation you should check/keep an eye on the following courses:
 
 - :fire: [Laurence Moroney](https://github.com/lmoroney)'s TensorFlow Proffesional Certificate (previously Specialization) 
 at Coursera for learning the basics of TensorFlow as you playaround with some common Deep Learning scenarios like 
-CNNs, Time Series and NLP. So feel free to check it at https://www.coursera.org/professional-certificates/tensorflow-in-practice, 
-and the course's resources at https://github.com/lmoroney/dlaicourse.
+CNNs, Time Series and NLP. So feel free to check it at [Coursera | TensorFlow in Practice](https://www.coursera.org/professional-certificates/tensorflow-in-practice), 
+and the course's resources at [lmoroney/dlaicourse](https://github.com/lmoroney/dlaicourse).
 
 - :star: [Daniel Bourke](https://github.com/mrdbourke)'s TensorFlow Zero to Mastery course he is currently 
 developing and it will be completely free including a lot of resources. So feel free to check it at 
-https://github.com/mrdbourke/tensorflow-deep-learning.
+[mrdbourke/tensorflow-deep-learning](https://github.com/mrdbourke/tensorflow-deep-learning).
+
+- :sparkles: [Andrew Ng](https://twitter.com/andrewyng)'s CNN course/explanation freely available on YouTube
+at [Convolutional Neural Networks - Course 4 of the Deep Learning Specialization](https://www.youtube.com/watch?v=ArPaAX_PhIs&list=PLkDaE6sCZn6Gl29AoE31iwdVwSG-KnDzF)
+that contains clear explanations on how the convolutional operations work, to help you get introduced to the
+Computer Vision field.
 
 __If you have some TensorFlow free learning material made by you that you want to share, feel free to
 create a PR including it in this list, and I'll be glad to feature your work!__
@@ -214,8 +214,8 @@ create a PR including it in this list, and I'll be glad to feature your work!__
 
 ## :rocket: Deployment
 
-Once the model has been saved using `SavedModel` format, it is pretty straight forward to get TF-Serving working, 
-if the installation succeeded. Unlike [TorchServe](https://pytorch.org/serve/), serving ML models in TF-Servving
+Once the model has been saved using `SavedModel` format, it is pretty straightforward to get TF-Serving working, 
+if the installation succeeded. Unlike [TorchServe](https://pytorch.org/serve/), serving ML models in TF-Serving
 is simpler as you just need to have `tensorflow-model-server` installed and a model in the specified format.
 
 But regarding the TF-Serving documentation (at least from my point of view) is not that clear, so the deployment
@@ -228,23 +228,23 @@ tensorflow_model_server --port=8500 --rest_api_port=8501 \
                         --model_base_path=/home/saved_models/simpsonsnet
 ```
 
-Now, even though the command is clear and self-explanatory, a more detailed explanation on the flags used is presented:
+Now, even though the command is clear and self-explanatory, a more detailed explanation of the flags used is presented:
 
-- `--port`: this is the port to listen on for the gRPC API, the default value is 8500; but it's a common practice to still
-define this flag's value so as to always know the configuration of the deployed TF-Serving Server.
+- `--port`: this is the port to listen on for the gRPC API, the default value is 8500, but it's a common practice to still
+define this flag's value to always know the configuration of the deployed TF-Serving Server.
 - `--rest_api_port`: this is the REST API port, which is set to zero by default, which means that the REST API will not be
-deployed/exposed unless you manually set a port. There's no default value, it just needs to be different than the gRPC port, so 
-we will set it to 8501 (the next port).
+deployed/exposed unless you manually set a port. There's no default value, it just needs to be different than the gRPC 
+port, so we will set it to 8501.
 - `--model_name`: this is the name of the ML model to serve, which is the one that will be exposed in the endpoint.
-- `--model_base_path`: this is the base path where the ML model that is going to be served is placed in. Note that his is the
-absolute path, do not use relative paths.
+- `--model_base_path`: this is the base path where the ML model that is going to be served is placed in. Note that it's
+an absolute path, do not use relative paths.
 
 More information about the TF-Serving CLI available at 
 [Train and serve a TensorFlow model with TensorFlow Serving](https://www.tensorflow.org/tfx/tutorials/serving/rest_simple#start_running_tensorflow_serving).
 Even though the official documenation is not that helpful, you can also check `tensorflow_model_server --help`.
 
 Once TF-Serving has been successfully deployed, you can send a sample HTTP GET request to the REST API available at 
-http://localhost:8501, using the endpoint /v1/models/simpsonsnet; to do so use the following command, that sends this
+http://localhost:8501/v1/models/simpsonsnet; to do so use the following command, which sends this
 request to the _Model Status API_ that returns the served ML model basic information:
 
 ```
@@ -268,27 +268,24 @@ That should output something similar to the following if everything is OK:
 }
 ```
 
-Another issue that they should be working on (and AFAIK they are not) is a way to gracefully shutdown TF-Serving server,
-as there's no clean way to do that... More information about this issue may be reported here https://github.com/tensorflow/serving/issues/356
+There is no way to gracefully stop the server, check [this issue](https://github.com/tensorflow/serving/issues/356) for updates,
+so you will need to either `CTRL+C` in the terminal where you launched `tensorflow_model_server`, kill the running process from 
+the terminal or just stop the running container.
 
-So on, the ways you have to shut it down are:
-
-- Getting the PID of `tensorflow_model_server` and kill that process:
+To look for the PID of the running `tensorflow_model_server` process and then kill it, you can use the following
+set of commands:
 
 ```
 ps aux | grep -i "tensorflow_model_server"
 kill -9 PID
 ```
 
-- Getting the running Docker Container ID and stopping/killing it: 
+To look for the running Docker Container ID and then stop it, you can just use the following set of commands:
 
 ```
 docker ps # Retrieve the CONTAINER_ID
 docker kill CONTAINER_ID
 ```
-
-None of those is the recommended way, as you are supposed to have a proper way to shut it down, anyway, currently those are
-the possibilities... If you have more information about this issue or a cleaner way to do this, please let me know!
 
 ---
 
@@ -304,19 +301,6 @@ docker run --rm --name tfserving_docker -p8500:8500 -p8501:8501 -d ubuntu-tfserv
 __Note__: make sure that you use the `-d` flag in `docker run` so that the container runs in the background
 and does not block your terminal.
 
-To check whether the deployment succeded or not you can either check if the Docker Container is running with:
-
-```
-docker ps
-```
-
-Or you can also use the runnning Docker Container ID and connect to it, so as to check the logs:
-
-```
-docker ps # Retrieve the CONTAINER_ID
-docker exec -it CONTAINER_ID /bin/bash
-```
-
 For more information regarding the Docker deployment, you should check TensorFlow's 
 explanation and notes available at [TF-Serving with Docker](https://www.tensorflow.org/tfx/serving/docker?hl=en), 
 as it also explains how to use their Docker image (instead of a clear Ubuntu one) and
@@ -331,9 +315,9 @@ as a template, making it easier to prepare the deployment file for your custom m
 ## :mage_man: Usage
 
 Along this section we will see how to interact with the deployed APIs (REST and gRPC) via Python, so as to send sample requests
-to the Prediction APIs to classify images from The Simpsons Characters.
+to the Prediction APIs to classify images from "The Simpsons Characters Dataset".
 
-__Note__: that as the model is pretty simple, the predictions can be wrong, but that's part of any ML project lifecycle, so that
+__Note__: as the model is pretty simple the accuracy is not perfect, but that's part of any ML project lifecycle so that
 the model improves with iterations and retraining processes. Feel free to update/improve the model!
 
 <p align="center">
@@ -345,8 +329,8 @@ the model improves with iterations and retraining processes. Feel free to update
 </p>
 
 Before proceeding with the Python usage, just to mention that as the mapping between the labels and the predicted Tensor is a future
-task (see [Future Tasks](#crystal_ball-future-tasks) section), we will be using the following mapping dictionary so as to go from the
-predicted Tensor highest index probability to the matching label on The Simpsons Characters Data dataset.
+task (see the [Future Tasks](#crystal_ball-future-tasks) section), we will be using the following dictionary so as to go from the
+predicted Tensor highest probability index to the matching label on "The Simpsons Characters Dataset".
 
 ```python
 {
@@ -363,11 +347,9 @@ predicted Tensor highest index probability to the matching label on The Simpsons
 
   ---
 
-If we want to interact with the deployed API from Python we can either use the [tensorflow-serving-api](https://github.com/tensorflow/serving) 
-Python package that easily lets us send gRPC requests or otherwise, you can use the [requests](https://requests.readthedocs.io/en/master/) Python 
+If you want to interact with the deployed API from Python you can either use the [tensorflow-serving-api](https://github.com/tensorflow/serving) 
+Python package that easily lets you send gRPC requests or otherwise, you can use the [requests](https://requests.readthedocs.io/en/master/) Python 
 library to send the request to the REST API instead.
-
-__Note__: that the data sent on the request is the input data of the Prediction APIs which is indeed a Tensor.
 
 ### __REST API requests using `requests`__:
 
@@ -410,15 +392,6 @@ prediction = tf.argmax(response.json()['predictions'][0])
 print(MAP_CHARACTERS[prediction.numpy()])
 >>> "homer_simpson"
 ```
-
-So that the request returns a JSON that looks like:
-
-```json
-{"predictions": [[0.00112942711, 1.89338539e-06, 6.25940174e-07, 0.0102192815, 9.25596683e-11, 0.000837278785, 1.31278114e-06, 1.00998604e-05, 3.29665169e-13, 7.77766691e-05, 9.85182158e-10, 0.922698259, 8.06062089e-05, 0.0109400107, 1.43308043e-07, 0.0312022753, 1.29294483e-06, 0.00805542618, 0.0105673922, 2.42914098e-06, 0.00104467699, 0.000662887353, 0.000846361392, 2.22587715e-07, 1.64697163e-08, 4.29076272e-06, 0.00160555355, 3.81118035e-08, 1.49436534e-08, 2.88611943e-07, 8.00799604e-09, 1.01875921e-05]]}
-```
-
-That we are processing so as to determine which is the label that corresponds to the highest probability index based on the
-model's predicted Tensor.
 
 ### __gRPC API requests using `tensorflow-serving-api`__:
 
@@ -487,9 +460,6 @@ print(MAP_CHARACTERS[result])
 >>> "homer_simpson"
 ```
 
-You can find a detailed example on how to use the TensorFlow Serving APIs with Python at 
-https://github.com/tensorflow/serving/tree/master/tensorflow_serving/example
-
 ---
 
 ## :computer: Credits
@@ -502,4 +472,4 @@ up to 42).
 
 ## :crystal_ball: Future Tasks
 
-- Include label-prediction mapping using the following solution: https://stackoverflow.com/questions/53530354/tensorflow-serving-predictions-mapped-to-labels
+- Include label-prediction mapping using [this solution](https://stackoverflow.com/questions/53530354/tensorflow-serving-predictions-mapped-to-labels).
