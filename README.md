@@ -17,9 +17,9 @@ TODO: ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/
 
 ---
 
-__:sparkles: :framed_picture: STREAMLIT UI WILL BE AVAILABLE IN THE UPCOMING DAYS AT [tensorflow-serving-streamlit](https://github.com/alvarobartt/tensorflow-serving-streamlit)!__
+__:sparkles: :framed_picture: STREAMLIT UI AVAILABLE AT [tensorflow-serving-streamlit](https://github.com/alvarobartt/tensorflow-serving-streamlit)!__
 
-TODO: ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/ui-demo.gif)
+![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-models/master/images/ui-demo.gif)
 
 ---
 
