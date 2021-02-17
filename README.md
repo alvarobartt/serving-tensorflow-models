@@ -8,9 +8,9 @@ and experiments, while keeping the same server architecture and APIs. TensorFlow
 provides out-of-the-box integration with TensorFlow models, but can be easily extended to 
 serve other types of models and data.__
 
-This repository is a guide on how to train, save, deploy and interact with ML models in production
-environments for TensorFlow models. Along this repository we will prepare and train a custom CNN model
-for image classification of [The Simpsons Characters Data dataset](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset), 
+This repository is a guide on how to train, save, deploy and interact with TensorFlow ML models in production
+environments for TensorFlow models. Along with this repository, we will prepare and train a custom CNN model
+for image classification over [The Simpsons Characters Dataset](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset), 
 that will be later deployed using [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving).
 
 TODO: ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
@@ -25,56 +25,57 @@ TODO: ![](https://raw.githubusercontent.com/alvarobartt/serving-tensorflow-model
 
 ## :closed_book: Table of Contents
 
-- [Requirements](#hammer_and_wrench-requirements)
-- [Dataset](#open_file_folder-dataset)
-- [Modelling](#robot-modelling)
-- [Deployment](#rocket-deployment)
-- [Docker](#whale2-docker)
-- [Usage](#mage_man-usage)
-- [Credits](#computer-credits)
-- [Future Tasks](#crystal_ball-future-tasks)
+- [:hammer_and_wrench: Requirements](#hammer_and_wrench-requirements)
+- [:open_file_folder: Dataset](#open_file_folder-dataset)
+- [:robot: Modelling](#robot-modelling)
+- [:rocket: Deployment](#rocket-deployment)
+- [:whale2: Docker](#whale2-docker)
+- [:mage_man: Usage](#mage_man-usage)
+- [:computer: Credits](#computer-credits)
+- [:crystal_ball: Future Tasks](#crystal_ball-future-tasks)
 
 ---
 
 ## :hammer_and_wrench: Requirements
 
-First of all you need to make sure that you have all the requirements installed, but before proceeding
-you should know that TF-Serving is just available for Ubuntu, which means that in order to use it you will
-either need a Ubuntu VM or just Docker installed in your OS so as to run a Docker container which deploys
-TF-Serving.
+First of all, you need to make sure that you have all the requirements installed, but before proceeding
+you should keep in mind that TF-Serving is not available for Windows or macOS, which means that if you 
+don't have an Ubuntu VM you will need to proceed with the Docker deployment, that requires you to have
+Docker installed.
 
 __:warning: Warning!__ In case you don't have Ubuntu, but still want to deploy TF-Serving via Docker, you 
 don't need to install TF-Serving with APT-GET, just run the Dockerfile (go to the section [Docker](#whale2-docker)).
 
-So, from your Ubuntu VM you should install `tensorflow-model-server`, but before installing it you need to 
-add the TF-Serving distribution URI as a package source as it follows:
+That said, if you didn't jump to the Docker section, now you need to install `tensorflow-model-server`, 
+which requires you to add the TF-Serving distribution URI as a package source as it follows:
 
 ```
 echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | sudo tee /etc/apt/sources.list.d/tensorflow-serving.list && \
 curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | sudo apt-key add -
 ```
 
-And then you can install `tensorflow-model-server` using APT-GET as it follows:
+So that then you can install `tensorflow-model-server` using APT-GET as it follows:
 
 ```
 apt-get update && apt-get install tensorflow-model-server
 ```
 
-Finally, from the client side you can install the Python package `tensorflow-serving-api`, which is useful 
-towards using the API.
+Finally, for the client side of the deployment you need install the Python package `tensorflow-serving-api`, 
+in case you want to use the gRPC API, which is faster than the REST API regarding the latency and inference time.
 
 ```
 pip install tensorflow-serving-api==2.4.1
 ```
 
-You will also need to install `tensorflow` matching version with the `tensorflow-serving-api` (we will be using
+You will also need to install the `tensorflow`'s matching version with the `tensorflow-serving-api` (we will be using
 the latest version on the date that this repository is being published) with the following command:
 
 ```
 pip install tensorflow==2.4.1
 ```
 
-Or you can also install them from the `requirements.txt` file as it follows:
+Or you can also avoid the manual installation of each requirement and just install them all at once with the
+following command, that will install all the requirements specified in the `requirements.txt` file:
 
 ```
 pip install -r requirements.txt
