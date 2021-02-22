@@ -21,12 +21,11 @@ jobs:
           unzip simpsonsnet.zip
           rm simpsonsnet.zip
 
-      # - name: Download evaluation dataset
-      #   run: |
-      #     wget -nv "https://www.dropbox.com/s/4l0efitsuvfoxhj/simpsonsnet.zip"
-      #     unzip evaluation.zip
-      #     rm evaluation.zip
-      #     mv evaluation/ tests/
+      - name: Download evaluation dataset
+        run: |
+          wget -nv "https://www.dropbox.com/s/6glvi3jg0hb1bsp/evaluation.zip"
+          unzip evaluation.zip
+          rm evaluation.zip
 
       - name: Run CML
         env:

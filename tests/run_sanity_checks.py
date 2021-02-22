@@ -6,11 +6,10 @@ import pytest
 import tensorflow as tf
 
 
-def load_model():
-    """Loads the model"""
+def run_sanity_checks():
     model = tf.keras.models.load_model("simpsonsnet/1")
     model.summary()
 
 
 if __name__ == "__main__":
-    load_model()
+    run_sanity_checks()
