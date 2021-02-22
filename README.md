@@ -13,7 +13,7 @@ environments for TensorFlow models. Along with this repository, we will prepare 
 for image classification over [The Simpsons Characters Dataset](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset), 
 that will be later deployed using [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving).
 
-TODO: ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
+![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
 
 ---
 
