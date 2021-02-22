@@ -39,5 +39,5 @@ jobs:
           cat results.txt >> report.md
           echo "" >> report.md
           echo "## Confusion Matrix" >> report.md
-          cat confusion_matrix.txt >> report.md
+          cml-publish confusion_matrix.png --md > report.md
           cml-send-comment report.md

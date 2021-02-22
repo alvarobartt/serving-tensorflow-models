@@ -8,6 +8,9 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import pandas as pd
 import numpy as np
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # Mapping of ids to labels (The Simpsons characters)
 MAPPING = {
     0: "abraham_grampa_simpson", 1: "apu_nahasapeemapetilon", 2: "barney_gumble", 3: "bart_simpson",
@@ -42,9 +45,11 @@ def run_sanity_checks():
     ground_truth = eval_generator.classes
 
     conf_mat = tf.math.confusion_matrix(ground_truth, predictions)
+    conf_mat = pd.DataFrame(conf_mat.numpy(), index=list(MAPPING.values()), columns=list(MAPPING.values()))
 
-    with open("confusion_matrix.txt", "w") as f:
-        f.write(pd.DataFrame(conf_mat.numpy(), index=list(MAPPING.values()), columns=list(MAPPING.values())).to_markdown())
+    plt.figure(figsize=(12,8)
+    sns.heatmap(conf_mat, annot=True)
+    sns.savefig("confusion_matrix.png")
 
 
 if __name__ == "__main__":

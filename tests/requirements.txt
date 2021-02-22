@@ -3,3 +3,5 @@ pillow
 scipy
 tabulate
 pandas
+seaborn
+matplotlib
