@@ -43,10 +43,8 @@ def run_sanity_checks():
 
     conf_mat = tf.math.confusion_matrix(ground_truth, predictions)
 
-    print(conf_mat)
-
-    # with open("confusion_matrix.txt", "w") as f:
-    #     f.write(pd.DataFrame(conf_mat.numpy(), index=list(ID2LABEL.values()), columns=list(ID2LABEL.values())).to_markdown())
+    with open("confusion_matrix.txt", "w") as f:
+        f.write(pd.DataFrame(conf_mat.numpy(), index=list(MAPPING.values()), columns=list(MAPPING.values())).to_markdown())
 
 
 if __name__ == "__main__":
