@@ -3,6 +3,8 @@
 
 import tensorflow as tf
 
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
 # Mapping of ids to labels (The Simpsons characters)
 MAPPING = {
     0: "abraham_grampa_simpson", 1: "apu_nahasapeemapetilon", 2: "barney_gumble", 3: "bart_simpson",
