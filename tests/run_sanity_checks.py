@@ -47,7 +47,7 @@ def run_sanity_checks():
     conf_mat = tf.math.confusion_matrix(ground_truth, predictions)
     conf_mat = pd.DataFrame(conf_mat.numpy(), index=list(MAPPING.values()), columns=list(MAPPING.values()))
 
-    plt.figure(figsize=(12,8)
+    plt.figure(figsize=(12,8))
     sns.heatmap(conf_mat, annot=True)
     sns.savefig("confusion_matrix.png")
 
