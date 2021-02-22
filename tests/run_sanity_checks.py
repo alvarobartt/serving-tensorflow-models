@@ -24,12 +24,15 @@ def run_sanity_checks():
     eval_datagen = ImageDataGenerator(rescale=1./255.)
 
     eval_generator = eval_datagen.flow_from_directory(
-        directory="evaluate", class_mode='categorical', target_size=(224, 224),
-        batch_size=16, shuffle=True
+        directory="evaluation", class_mode='categorical', target_size=(224, 224),
+        batch_size=16, shuffle=False
     )
 
     result = model.evaluate(eval_generator)
     print(result)
+
+    results = model.predict(eval_generator)
+    print(results)
 
 
 if __name__ == "__main__":
