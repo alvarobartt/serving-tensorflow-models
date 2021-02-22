@@ -1,0 +1,45 @@
+name: sanity-checks
+on:
+  push:
+    paths:
+      - .github/workflows/sanity-checks.yml
+      - tests/**
+jobs:
+  run:
+    runs-on: [ubuntu-latest]
+    container: docker://dvcorg/cml-py3:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Ubuntu dependencies
+        run: apt-get update && apt-get install wget unzip
+
+      - name: Download TensorFlow model
+        run: |
+          wget -nv "https://www.dropbox.com/s/4l0efitsuvfoxhj/simpsonsnet.zip"
+          unzip simpsonsnet.zip
+          rm simpsonsnet.zip
+          mv simpsonsnet/ tests/
+
+      # - name: Download evaluation dataset
+      #   run: |
+      #     wget -nv "https://www.dropbox.com/s/4l0efitsuvfoxhj/simpsonsnet.zip"
+      #     unzip evaluation.zip
+      #     rm evaluation.zip
+      #     mv evaluation/ tests/
+
+      - name: Run CML
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Your ML workflow goes here
+          sudo -H pip install -r tests/requirements.txt
+          python tests/run_sanity_checks.py
+          # Write your CML report
+          echo "## Accuracy & Loss" >> report.md
+          # cat results.txt >> report.md
+          # echo "" >> report.md
+          # echo "## Confusion Matrix" >> report.md
+          # cat confusion_matrix.txt >> report.md
+          # cml-send-comment report.md
