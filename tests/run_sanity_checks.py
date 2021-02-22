@@ -8,7 +8,7 @@ import tensorflow as tf
 
 def load_model():
     """Loads the model"""
-    model = tf.keras.models.load_model("simpsonsnet")
+    model = tf.keras.models.load_model("simpsonsnet/1/")
     model.summary()
 
 
