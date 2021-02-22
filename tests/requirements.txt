@@ -2,3 +2,4 @@ tensorflow
 pillow
 scipy
 tabulate
+pandas
