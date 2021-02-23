@@ -49,6 +49,7 @@ def run_sanity_checks():
 
     plt.figure(figsize=(12,8))
     sns.heatmap(conf_mat, annot=True)
+    plt.tight_layout()
     plt.savefig("confusion_matrix.png")
 
 
