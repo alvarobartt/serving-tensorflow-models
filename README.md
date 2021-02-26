@@ -14,6 +14,7 @@ for image classification over [The Simpsons Characters Dataset](https://www.kagg
 that will be later deployed using [TensorFlow Serving](https://www.tensorflow.org/tfx/guide/serving).
 
 ![sanity-checks](https://github.com/alvarobartt/serving-tensorflow-models/workflows/sanity-checks/badge.svg?branch=master)
+[![](https://img.shields.io/static/v1?label=Read%20it%20on&message=Medium&color=informational&logo=Medium)](https://towardsdatascience.com/serving-tensorflow-models-with-tensorflow-serving-9f1058ac7140)
 
 ---
 
