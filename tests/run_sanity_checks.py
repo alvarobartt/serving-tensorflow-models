@@ -1,4 +1,4 @@
-# Copyright 2018-2021 Alvaro Bartolome, alvarobartt @ GitHub
+# Copyright 2021 Alvaro Bartolome, alvarobartt @ GitHub
 # See LICENSE for details.
 
 import tensorflow as tf
