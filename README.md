@@ -65,15 +65,20 @@ Finally, for the client side of the deployment you need install the Python packa
 in case you want to use the gRPC API, which is faster than the REST API regarding the latency and inference time.
 
 ```
-pip install tensorflow-serving-api==2.4.1
+pip install tensorflow-serving-api==2.5.2
 ```
 
 You will also need to install the `tensorflow`'s matching version with the `tensorflow-serving-api` (we will be using
 the latest version on the date that this repository is being published) with the following command:
 
 ```
-pip install tensorflow==2.4.1
+pip install tensorflow==2.5.1
 ```
+
+:pushpin: __Update__: in this concrete case the versions do not match according to the comments in
+https://github.com/tensorflow/serving/releases/tag/2.5.2, but the usual scenario should be matching
+versions between both `tensorflow` and `tensorflow-serving-api`. Also the versions have been updated in
+this repository due to a Dependabot Alert as it can be seen at https://github.com/advisories/GHSA-cmgw-8vpc-rc59.
 
 Or you can also avoid the manual installation of each requirement and just install them all at once with the
 following command, that will install all the requirements specified in the `requirements.txt` file:
