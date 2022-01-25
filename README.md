@@ -68,10 +68,10 @@ versions between both `tensorflow` and `tensorflow-serving-api`. Also the versio
 this repository due to a Dependabot Alert as it can be seen at https://github.com/advisories/GHSA-cmgw-8vpc-rc59.
 
 Or you can also avoid the manual installation of each requirement and just install them all at once with the
-following command, that will install all the requirements specified in the `requirements.txt` file:
+following command, that will install all the requirements specified in the `requirements/requirements.txt` file:
 
 ```
-pip install -r requirements.txt
+pip install -r requirements/requirements.txt
 ```
 
 If you have any problems regarding the TensorFlow installation, visit [Installation | TensorFlow](https://www.tensorflow.org/install?hl=es-419).
@@ -350,7 +350,7 @@ Regarding the REST requests to the deployed TF-Serving Prediction API you need t
 it follows:
 
 ```
-pip install -r requirements-rest.txt
+pip install -r requirements/requirements-rest.txt
 ```
 
 And then use the following script which will send a sample The Simpsons image to be classified using the deployed model:
@@ -392,7 +392,7 @@ Now, regarding the gRPC requests to the deployed TF-Serving Prediction API you n
 it follows:
 
 ```
-pip install -r requirements-grpc.txt
+pip install -r requirements/requirements-grpc.txt
 ```
 
 And then use the following script which will send a sample The Simpsons image to be classified using the deployed model:
