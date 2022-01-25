@@ -24,19 +24,6 @@ __:sparkles: :framed_picture: STREAMLIT UI AVAILABLE AT [tensorflow-serving-stre
 
 ---
 
-## :closed_book: Table of Contents
-
-- [:hammer_and_wrench: Requirements](#hammer_and_wrench-requirements)
-- [:open_file_folder: Dataset](#open_file_folder-dataset)
-- [:robot: Modelling](#robot-modelling)
-- [:rocket: Deployment](#rocket-deployment)
-- [:whale2: Docker](#whale2-docker)
-- [:mage_man: Usage](#mage_man-usage)
-- [:computer: Credits](#computer-credits)
-- [:crystal_ball: Future Tasks](#crystal_ball-future-tasks)
-
----
-
 ## :hammer_and_wrench: Requirements
 
 First of all, you need to make sure that you have all the requirements installed, but before proceeding
