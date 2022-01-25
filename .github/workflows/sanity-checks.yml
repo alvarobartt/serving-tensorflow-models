@@ -26,19 +26,22 @@ jobs:
           wget -nv "https://www.dropbox.com/s/6glvi3jg0hb1bsp/evaluation.zip"
           unzip evaluation.zip
           rm evaluation.zip
+          
+      - name: Install requirements
+        run: |
+          sudo -H pip install --upgrade pip
+          sudo -H pip install -r requirements/requirements-tests.txt
 
       - name: Run CML
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Your ML workflow goes here
-          sudo -H pip install --upgrade pip
-          sudo -H pip install -r requirements/requirements-tests.txt
           python tests/run_sanity_checks.py
-          # Write your CML report
+          
           echo "## Accuracy & Loss" >> report.md
           cat results.txt >> report.md
           echo "" >> report.md
           echo "## Confusion Matrix" >> report.md
+          
           cml-publish confusion_matrix.png --md >> report.md
           cml-send-comment report.md
