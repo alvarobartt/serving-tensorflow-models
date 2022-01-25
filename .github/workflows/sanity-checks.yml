@@ -32,6 +32,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Your ML workflow goes here
+          sudo -H pip install --upgrade pip
           sudo -H pip install -r requirements/requirements-tests.txt
           python tests/run_sanity_checks.py
           # Write your CML report
